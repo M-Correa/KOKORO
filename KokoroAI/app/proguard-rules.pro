@@ -1,0 +1,1 @@
+# Kokoro AI proguard rules

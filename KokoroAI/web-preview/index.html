@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kokoro AI • Web Preview & Interactive Debugger</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="debugger-layout">
+
+  <!-- SMARTPHONE DEVICE FRAME -->
+  <div class="phone-frame">
+    <!-- Dynamic Island -->
+    <div class="phone-island"></div>
+
+    <!-- SCREEN SCROLL CONTAINER -->
+    <div class="screen-scroll-container">
+
+      <!-- ================= PANTALLA 1: HOME & DASHBOARD ================= -->
+      <div id="screen-home" class="screen active">
+        <!-- Header -->
+        <div class="app-header">
+          <button class="header-btn" onclick="logEvent('ACTION', 'Heart tapped ♡')">💖</button>
+          <div class="header-title">
+            <h1>KOKORO <span>AI✦</span></h1>
+            <p id="vip-status-text">Modo Compañera Activa</p>
+          </div>
+          <button class="header-btn" onclick="logEvent('ACTION', 'Profile info opened')">👾</button>
+        </div>
+
+        <!-- Hero Avatar (Tap to open full body view) -->
+        <div class="avatar-hero-container" onclick="openFullBodyModal()">
+          <div class="avatar-aura" id="avatar-aura"></div>
+          <div class="avatar-circle">
+            <img id="avatar-main-img" src="kokoro_outfit_school.png" alt="Kokoro Waifu Avatar">
+            <div class="avatar-sticker" id="avatar-sticker">🎒</div>
+          </div>
+          <div class="avatar-outfit-tag" id="avatar-outfit-tag">
+            <span id="equipped-emoji">🎒</span>
+            <span id="equipped-name">Uniforme Escolar</span>
+            <span style="font-size:9px; color:#EC4899;">• Ver cuerpo 👗</span>
+          </div>
+        </div>
+
+        <!-- Dialogue Glassmorphic Card -->
+        <div class="glass-card dialogue-card">
+          <div class="dialogue-top">
+            <div class="status-pill">
+              <div class="status-dot"></div>
+              <span>¡Hola Feliz! • Paso para cuidarte</span>
+            </div>
+            <button class="speak-btn" onclick="speakCurrentGreeting()" title="Kokoro lee su respuesta en voz alta">
+              🔊
+            </button>
+          </div>
+          <div class="dialogue-text" id="dialogue-greeting">
+            Buenas noches Matias, ¿te pido tu ramen favorito en PedidosYa?
+          </div>
+          <div class="dialogue-sub" id="dialogue-sub">
+            Noté que llevas 2 horas trabajando. Te traje té verde para concentrarte. ¿También querés que pida tu cena habitual?
+          </div>
+          <div class="dialogue-actions">
+            <button class="btn-primary" onclick="orderRamen()">¡Pedir Ramen!</button>
+            <button class="btn-secondary" onclick="speakText('De acuerdo Matias, descansamos un ratito más.')">Más tarde</button>
+          </div>
+
+          <!-- Interactive AI Chat Input -->
+          <div style="margin-top:12px; display:flex; gap:8px; background:rgba(139,92,246,0.08); padding:6px 10px; border-radius:20px; border:1px solid rgba(139,92,246,0.25); align-items:center;">
+            <input type="text" id="chat-input" placeholder="Escribe algo a Kokoro AI..." onkeydown="if(event.key==='Enter') sendWebChatMessage()" style="flex:1; border:none; background:transparent; outline:none; font-size:12px; color:var(--text-primary); font-family:inherit;">
+            <button onclick="sendWebChatMessage()" id="chat-send-btn" style="background:linear-gradient(135deg, var(--primary-violet), var(--primary-pink)); color:#FFF; border:none; border-radius:50%; width:28px; height:28px; cursor:pointer; font-size:12px; display:flex; align-items:center; justify-content:center;">➤</button>
+          </div>
+        </div>
+
+        <!-- Spotify Lo-Fi Player (Real Audio) -->
+        <div class="glass-card">
+          <div class="spotify-top">
+            <img src="album_art.png" alt="Album" class="spotify-cover">
+            <div class="spotify-info">
+              <div class="spotify-brand">
+                <span style="color:#1DB954; font-weight:bold;">♫</span> Spotify
+              </div>
+              <div class="spotify-title" id="track-title">Lo-Fi Beats</div>
+              <div class="spotify-artist">Kokoro AI Playlist</div>
+            </div>
+            <div class="equalizer" id="equalizer">
+              <div class="eq-bar"></div>
+              <div class="eq-bar"></div>
+              <div class="eq-bar"></div>
+              <div class="eq-bar"></div>
+            </div>
+          </div>
+
+          <input type="range" class="spotify-slider" id="audio-slider" min="0" max="100" value="0" oninput="seekAudio(this.value)">
+
+          <div class="spotify-controls">
+            <button class="ctrl-btn" onclick="prevTrack()">⏮</button>
+            <button class="play-btn" id="play-pause-btn" onclick="togglePlayPause()">▶</button>
+            <button class="ctrl-btn" onclick="nextTrack()">⏭</button>
+          </div>
+        </div>
+
+        <!-- Quick Action Pills -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:14px; font-weight:700;">Acciones Proactivas</span>
+          <span style="font-size:11px; font-weight:700; color:var(--primary-violet);">Zero-UI</span>
+        </div>
+        <div class="pills-row">
+          <div class="pill-btn" onclick="orderRamen()">
+            <span>🍜</span> Order Food
+          </div>
+          <div class="pill-btn" id="study-pill" onclick="toggleStudyMode()">
+            <span>📖</span> Study Mode
+          </div>
+          <div class="pill-btn" onclick="switchTab('wardrobe')">
+            <span>👗</span> Wardrobe
+          </div>
+        </div>
+
+        <!-- Alarms Card -->
+        <div class="glass-card" style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="font-size:22px; background:rgba(139,92,246,0.15); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;">⏰</div>
+            <div>
+              <div style="font-size:13px; font-weight:700;">Alarma Mañana 07:30</div>
+              <div style="font-size:11px; color:var(--text-secondary);">Despertador con voz dulce activado</div>
+            </div>
+          </div>
+          <input type="checkbox" checked style="accent-color:var(--primary-violet); width:18px; height:18px;">
+        </div>
+      </div>
+
+      <!-- ================= PANTALLA 2: GUARDARROPA & VIP ================= -->
+      <div id="screen-wardrobe" class="screen">
+        <div class="app-header">
+          <div>
+            <h1 style="font-size:20px; font-weight:800;">Guardarropa & VIP</h1>
+            <p style="font-size:12px; color:var(--text-secondary);">Personaliza el estilo visual de tu waifu</p>
+          </div>
+          <button class="header-btn" onclick="openFullBodyModal()">✨</button>
+        </div>
+
+        <!-- Kokoro Plus VIP Banner -->
+        <div class="vip-banner">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="font-size:20px;">👑</span>
+              <strong style="font-size:16px; color:var(--primary-violet);">Kokoro Plus VIP</strong>
+            </div>
+            <span id="vip-badge-tag" style="display:none; background:var(--green); color:#FFF; font-size:10px; font-weight:bold; padding:2px 8px; border-radius:10px;">ACTIVO</span>
+          </div>
+          <p style="font-size:12px; color:var(--text-secondary); margin-top:6px;">
+            Desbloquea todos los 8 atuendos exclusivos, peinados y voces neuronales.
+          </p>
+          <button class="vip-banner-btn" id="vip-trial-btn" onclick="activateVipTrial()">
+            Activar Prueba Gratis de 7 Días ⚡
+          </button>
+        </div>
+
+        <!-- Outfits Grid -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px;">
+          <span style="font-size:14px; font-weight:700;">Guardarropa de Kokoro</span>
+          <span style="font-size:11px; font-weight:700; color:var(--primary-violet);">8 Atuendos</span>
+        </div>
+
+        <div class="outfit-grid" id="outfit-grid-container">
+          <!-- Outfits rendered dynamically by app.js -->
+        </div>
+      </div>
+
+      <!-- ================= PANTALLA 3: AJUSTES DE VOZ & PERSONALIDAD ================= -->
+      <div id="screen-personality" class="screen">
+        <div class="app-header">
+          <div>
+            <h1 style="font-size:20px; font-weight:800;">Personalidad & Voz</h1>
+            <p style="font-size:12px; color:var(--text-secondary);">Modula el afecto y timbre de Kokoro</p>
+          </div>
+          <button class="header-btn" onclick="speakCurrentReaction()">🎙️</button>
+        </div>
+
+        <!-- Section 1: Nivel de Afecto -->
+        <div class="glass-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <strong style="font-size:14px;">Nivel de Afecto & Modo</strong>
+            <span id="personality-badge" style="background:linear-gradient(90deg, var(--primary-violet), var(--primary-pink)); color:#FFF; font-size:11px; font-weight:bold; padding:3px 10px; border-radius:12px;">
+              甘えん坊 Dulce & Waifu
+            </span>
+          </div>
+
+          <div class="slider-group">
+            <input type="range" id="affect-slider" min="0" max="100" value="50" oninput="onAffectChange(this.value)">
+            <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-hint); margin-top:4px;">
+              <span>Tsundere (0.0)</span>
+              <span>Dulce & Waifu (0.5)</span>
+              <span>Profesional (1.0)</span>
+            </div>
+          </div>
+
+          <!-- Live Reactive Speech Box -->
+          <div style="background:#FAF5FF; border:1px solid rgba(139,92,246,0.25); border-radius:14px; padding:12px; margin-top:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:11px; font-weight:700; color:var(--primary-violet);">💬 Reacción en tiempo real de Kokoro:</span>
+              <button class="speak-btn" onclick="speakCurrentReaction()" title="Escuchar">🔊</button>
+            </div>
+            <div id="live-reaction-text" style="font-size:12px; font-weight:600; color:var(--text-primary); line-height:1.4;">
+              "¡Te extrañé mucho Matias! Siempre estoy aquí para apoyarte y cuidarte. ¡Haces un gran trabajo hoy! ♡"
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Voces de Lectura -->
+        <div style="margin: 14px 0 8px 0; font-size:14px; font-weight:700;">Voces de Lectura Gratuitas & VIP</div>
+        <div id="voices-list-container">
+          <!-- Voice options rendered by app.js -->
+        </div>
+
+        <!-- Section 3: Moduladores de Audio -->
+        <div class="glass-card" style="margin-top:12px;">
+          <strong style="font-size:14px;">Ajustes Finos de Audio</strong>
+
+          <div class="slider-group" style="margin-top:12px;">
+            <label>
+              <span>Tono de Voz (Pitch)</span>
+              <span id="pitch-val" style="color:var(--primary-violet);">1.0x</span>
+            </label>
+            <input type="range" id="pitch-slider" min="50" max="150" value="100" oninput="onPitchChange(this.value)">
+            <div style="display:flex; justify-content:space-between; font-size:9px; color:var(--text-hint);">
+              <span>Grave</span><span>Normal</span><span>Agudo</span>
+            </div>
+          </div>
+
+          <div class="slider-group" style="margin-top:10px;">
+            <label>
+              <span>Velocidad de Habla (Speed)</span>
+              <span id="speed-val" style="color:var(--primary-pink);">1.0x</span>
+            </label>
+            <input type="range" id="speed-slider" min="75" max="125" value="100" oninput="onSpeedChange(this.value)">
+            <div style="display:flex; justify-content:space-between; font-size:9px; color:var(--text-hint);">
+              <span>Pausada</span><span>Natural</span><span>Rápida</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BOTTOM FLOATING NAVIGATION BAR -->
+    <div class="bottom-nav">
+      <button class="nav-item active" id="nav-btn-home" onclick="switchTab('home')">
+        <span>🏠</span> <span>Inicio</span>
+      </button>
+      <button class="nav-item" id="nav-btn-wardrobe" onclick="switchTab('wardrobe')">
+        <span>👗</span> <span>Guardarropa</span>
+      </button>
+      <button class="nav-item" id="nav-btn-personality" onclick="switchTab('personality')">
+        <span>🎙️</span> <span>Personalidad</span>
+      </button>
+    </div>
+
+    <!-- FULL BODY WAIFU MODAL -->
+    <div class="modal-overlay" id="fullbody-modal">
+      <div class="modal-box">
+        <button class="modal-close" onclick="closeFullBodyModal()">✕</button>
+
+        <div style="text-align:center; margin-bottom:8px;">
+          <h2 style="font-size:17px; font-weight:800; color:var(--text-primary);">
+            Kokoro AI <span style="font-size:12px; color:var(--primary-violet);">• Cuerpo Completo</span>
+          </h2>
+          <p style="font-size:11px; color:var(--text-secondary);">Visualizador de ropa, peinado y accesorios</p>
+        </div>
+
+        <div class="fullbody-showcase" id="fullbody-showcase">
+          <!-- Character Full Body Display Card -->
+          <div style="position:relative; width:85%; height:260px; border-radius:18px; overflow:hidden; border:2.5px solid var(--primary-violet); box-shadow:0 8px 24px rgba(139,92,246,0.25); margin-bottom:10px; background:#FFF; display:flex; align-items:center; justify-content:center;">
+            <img id="modal-fullbody-img" src="kokoro_outfit_school.png" style="width:100%; height:100%; object-fit:contain;">
+            <div style="position:absolute; top:6px; right:6px; background:rgba(255,255,255,0.92); border-radius:50%; padding:4px; font-size:16px; box-shadow:0 2px 6px rgba(0,0,0,0.1);" id="modal-emoji-badge">🎒</div>
+          </div>
+
+          <div style="background:var(--primary-violet); color:#FFF; font-size:12px; font-weight:bold; padding:4px 14px; border-radius:14px; margin-bottom:6px;" id="modal-outfit-badge">
+            🎒 Uniforme Escolar
+          </div>
+
+          <div style="display:flex; gap:6px; margin-bottom:8px;">
+            <span style="background:#FFF; border:1px solid var(--primary-violet); color:var(--primary-violet); font-size:10px; font-weight:600; padding:3px 8px; border-radius:10px;" id="modal-hair-chip">
+              💇 Doble Coleta Escolar (Twin-Tails)
+            </span>
+            <span style="background:#FFF; border:1px solid var(--primary-pink); color:var(--primary-pink); font-size:10px; font-weight:600; padding:3px 8px; border-radius:10px;" id="modal-acc-chip">
+              🎀 Lazos rojos
+            </span>
+          </div>
+
+          <p style="font-size:11px; color:var(--text-secondary); line-height:1.4; padding:0 8px;" id="modal-fullbody-desc">
+            Falda tableada azul marino, cuello marinero tradicional con pañuelo rojo carmesí, medias altas oscuras y mocasines.
+          </p>
+        </div>
+
+        <!-- Quote bubble in modal -->
+        <div style="background:#FFF; border:1px solid rgba(139,92,246,0.3); border-radius:14px; padding:10px; display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <div style="font-size:11px; font-weight:600; color:var(--text-primary); flex:1;" id="modal-quote-text">
+            "¡Listo Matias! Me puse el uniforme escolar. ¿Nos vamos a estudiar juntos hoy?"
+          </div>
+          <button class="speak-btn" onclick="speakModalQuote()" title="Escuchar voz">🔊</button>
+        </div>
+
+        <!-- Quick Outfit Switcher Row -->
+        <div style="font-size:11px; font-weight:bold; margin-bottom:6px;">Cambiar atuendo en vivo:</div>
+        <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:6px;" id="modal-outfit-selector">
+          <!-- Injected by app.js -->
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- /phone-frame -->
+
+
+  <!-- DESKTOP DEBUG CONSOLE PANEL -->
+  <div class="debug-panel">
+    <div class="debug-header">
+      <div>
+        <h2>🛠️ Consola de Depuración Kokoro AI</h2>
+        <span style="font-size:11px; color:#9D92B3;">Simulador de Eventos, Audio y Síntesis TTS</span>
+      </div>
+      <div class="debug-status" id="debug-status">LIVE</div>
+    </div>
+
+    <!-- Quick Action Tests -->
+    <div class="debug-quick-test">
+      <button class="test-btn" onclick="speakCurrentGreeting()">🔊 Test Voz Proactiva</button>
+      <button class="test-btn" onclick="togglePlayPause()">🎵 Toggle Lo-Fi Audio</button>
+      <button class="test-btn" onclick="orderRamen()">🍜 Test Pedir Ramen</button>
+      <button class="test-btn" onclick="openFullBodyModal()">👗 Ver Cuerpo Completo</button>
+      <button class="test-btn" onclick="toggleVipSubscription()">👑 Toggle VIP Estado</button>
+      <button class="test-btn" onclick="clearLogs()">🗑️ Limpiar Logs</button>
+    </div>
+
+    <!-- Live Logs -->
+    <div class="debug-log-view" id="debug-log-view">
+      <div class="log-line action">[SISTEMA] Entorno de depuración iniciado correctamente.</div>
+      <div class="log-line state">[ESTADO] Atuendo actual: Uniforme Escolar (Clásico)</div>
+      <div class="log-line audio">[AUDIO] Pista Lo-Fi cargada: kokoro_lofi.mp3</div>
+      <div class="log-line tts">[TTS] Web Speech API inicializada en español.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Hidden Real Audio element -->
+<audio id="lofi-audio" src="kokoro_lofi.mp3" loop preload="auto"></audio>
+
+<script src="app.js"></script>
+</body>
+</html>
