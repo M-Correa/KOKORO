@@ -191,19 +191,24 @@ function speakText(text) {
   window.speechSynthesis.cancel(); // Detener locución previa
 
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "es-ES";
+  utterance.lang = "es-MX"; // Neutral Latin American Spanish (eliminates Iberian accent)
 
   const voiceObj = VOICES.find(v => v.id === state.selectedVoiceId) || VOICES[0];
-  const finalPitch = Math.min(2.0, Math.max(0.5, state.pitch * voiceObj.pitchMultiplier));
-  const finalRate = Math.min(2.0, Math.max(0.5, state.speed * voiceObj.rateMultiplier));
+  // Anime tone calibration (higher pitch, cheerful waifu cadence)
+  const animePitchMultiplier = (voiceObj.pitchMultiplier || 1.0) * 1.22;
+  const finalPitch = Math.min(2.0, Math.max(0.7, state.pitch * animePitchMultiplier));
+  const finalRate = Math.min(2.0, Math.max(0.7, state.speed * (voiceObj.rateMultiplier || 1.0) * 1.04));
 
   utterance.pitch = finalPitch;
   utterance.rate = finalRate;
 
-  // Intenta encontrar una voz en español del sistema
+  // Prioritize Latin American female natural voices
   const sysVoices = window.speechSynthesis.getVoices();
-  const esVoice = sysVoices.find(v => v.lang.startsWith("es") && (v.name.includes("Natural") || v.name.includes("Female") || v.name.includes("Helena") || v.name.includes("Sabina") || true));
-  if (esVoice) utterance.voice = esVoice;
+  const latinFemaleVoice = sysVoices.find(v => (v.lang === "es-MX" || v.lang === "es-US" || v.lang === "es-419") && (v.name.includes("Natural") || v.name.includes("Female") || v.name.includes("Sabina") || v.name.includes("Dalia") || v.name.includes("Mia")))
+    || sysVoices.find(v => v.lang.startsWith("es") && (v.name.includes("Natural") || v.name.includes("Female")))
+    || sysVoices.find(v => v.lang.startsWith("es"));
+
+  if (latinFemaleVoice) utterance.voice = latinFemaleVoice;
 
   utterance.onstart = () => {
     logEvent("TTS", `Kokoro hablando con voz '${voiceObj.name}': "${text.substring(0, 40)}..." (Pitch: ${finalPitch.toFixed(2)}, Rate: ${finalRate.toFixed(2)})`);
