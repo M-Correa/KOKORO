@@ -1,4 +1,4 @@
-$base = 'https://k9br9dc7-5123.brs.devtunnels.ms'
+$base = 'https://pc4gr3cx-5123.brs.devtunnels.ms'
 $headers = @{'X-Tunnel-Skip-Anti-Abuse-Page'='true'}
 
 $endpoints = @('/api/Dashboard', '/api/Wardrobe', '/api/Personality')

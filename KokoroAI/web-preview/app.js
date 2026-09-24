@@ -556,7 +556,7 @@ function clearLogs() {
 }
 
 // ================= BACKEND API INTEGRATION =================
-const BACKEND_BASE_URL = "https://k9br9dc7-5123.brs.devtunnels.ms";
+const BACKEND_BASE_URL = "https://pc4gr3cx-5123.brs.devtunnels.ms";
 const BACKEND_HEADERS = {
   "X-Tunnel-Skip-Anti-Abuse-Page": "true",
   "Content-Type": "application/json"

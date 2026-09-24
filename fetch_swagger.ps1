@@ -1,9 +1,9 @@
 $urls = @(
-  'https://k9br9dc7-5123.brs.devtunnels.ms/index.js',
-  'https://k9br9dc7-5123.brs.devtunnels.ms/swagger/v1/swagger.json',
-  'https://k9br9dc7-5123.brs.devtunnels.ms/v1/swagger.json',
-  'https://k9br9dc7-5123.brs.devtunnels.ms/swagger.json',
-  'https://k9br9dc7-5123.brs.devtunnels.ms/openapi.json'
+  'https://pc4gr3cx-5123.brs.devtunnels.ms/index.js',
+  'https://pc4gr3cx-5123.brs.devtunnels.ms/swagger/v1/swagger.json',
+  'https://pc4gr3cx-5123.brs.devtunnels.ms/v1/swagger.json',
+  'https://pc4gr3cx-5123.brs.devtunnels.ms/swagger.json',
+  'https://pc4gr3cx-5123.brs.devtunnels.ms/openapi.json'
 )
 
 $headers = @{

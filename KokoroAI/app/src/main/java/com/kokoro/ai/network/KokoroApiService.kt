@@ -40,7 +40,7 @@ interface KokoroApiService {
 }
 
 object NetworkClient {
-    const val BASE_URL = "https://k9br9dc7-5123.brs.devtunnels.ms/"
+    const val BASE_URL = "https://pc4gr3cx-5123.brs.devtunnels.ms/"
 
     private val okHttpClient: OkHttpClient by lazy {
         val logging = HttpLoggingInterceptor().apply {
@@ -59,9 +59,10 @@ object NetworkClient {
                 chain.proceed(request)
             }
             .addInterceptor(logging)
-            .connectTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(20, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(120, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .callTimeout(150, TimeUnit.SECONDS)
             .build()
     }
 
